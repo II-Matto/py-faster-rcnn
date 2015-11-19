@@ -29,7 +29,8 @@ class my_facedb(datasets.imdb):
         self._image_ext = '.jpg'
         self._image_index = self._load_image_set_index()
         # Default to roidb handler
-        self._roidb_handler = self.selective_search_roidb
+        #self._roidb_handler = self.selective_search_roidb
+        self._roidb_handler = self.rpn_roidb
 
         # PASCAL specific config options
         self.config = {'cleanup'  : True,
@@ -185,7 +186,8 @@ class my_facedb(datasets.imdb):
         #num_objs = len(objs)
 
         with open(filename) as f:
-            face_labels = [p.rstrip("\n") for p in f.readlines()]
+            face_labels = [p.rstrip("\r\n") for p in f.readlines()]
+            #print filename, face_labels
 
             face_num = len(face_labels)
             boxes = np.zeros((face_num, 4), dtype=np.uint16)
@@ -198,7 +200,7 @@ class my_facedb(datasets.imdb):
                 y1 = float(the_face[2])
                 x2 = float(the_face[1] + the_face[3] - 1)
                 y2 = float(the_face[2] + the_face[4] - 1)
-                cls = int(the_face[0])
+                cls = int(the_face[0]) + 1
                 boxes[ix, :] = [x1, y1, x2, y2]
                 gt_classes[ix] = cls
                 overlaps[ix, cls] = 1.0
