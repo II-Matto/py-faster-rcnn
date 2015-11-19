@@ -284,6 +284,6 @@ class my_facedb(datasets.imdb):
             self.config['cleanup'] = True
 
 if __name__ == '__main__':
-    d = datasets.my_facedb('aflw')
+    d = datasets.my_facedb('aflw', '/home/code/wushuzhe/data/aflw/data/flickr')
     res = d.roidb
     from IPython import embed; embed()

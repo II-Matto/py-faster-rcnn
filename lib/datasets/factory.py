@@ -39,7 +39,7 @@ for top_k in np.arange(1000, 11000, 1000):
                     _selective_search_IJCV_top_k(split, year, top_k))
 
 name = 'aflw'
-__sets[name] = datasets.my_facedb('aflw', data_path='/home/code/wushuzhe/data/aflw/data/flickr')
+__sets[name] = datasets.my_facedb('aflw', '/home/code/wushuzhe/data/aflw/data/flickr')
 
 def get_imdb(name):
     """Get an imdb (image database) by name."""
