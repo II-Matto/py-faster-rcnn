@@ -10,6 +10,7 @@
 __sets = {}
 
 import datasets.pascal_voc
+import datasets.my_facedb
 import numpy as np
 
 def _selective_search_IJCV_top_k(split, year, top_k):
