@@ -18,12 +18,11 @@ import cPickle
 import subprocess
 
 class my_facedb(datasets.imdb):
-    def __init__(self, image_set, data_path, result_dir=None):
-        assert result_dir is not None
+    def __init__(self, image_set, data_path):
         datasets.imdb.__init__(self, image_set)
         self._image_set = image_set
         self._data_path = data_path
-        self._result_dir = result_dir
+        self._result_dir = "result_aflw"
         self._classes = ('__background__', # always index 0
                          'frontal', 'profile')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
