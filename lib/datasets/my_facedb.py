@@ -188,9 +188,9 @@ class my_facedb(datasets.imdb):
             face_labels = [p.rstrip("\n") for p in f.readlines()]
 
             face_num = len(face_labels)
-            boxes = np.zeros((num_objs, 4), dtype=np.uint16)
-            gt_classes = np.zeros((num_objs), dtype=np.int32)
-            overlaps = np.zeros((num_objs, self.num_classes), dtype=np.float32)
+            boxes = np.zeros((face_num, 4), dtype=np.uint16)
+            gt_classes = np.zeros((face_num), dtype=np.int32)
+            overlaps = np.zeros((face_num, self.num_classes), dtype=np.float32)
 
             for ix, face in enumerate(face_labels):
                 the_face = map(float, face.split(" "))
