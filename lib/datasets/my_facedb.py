@@ -20,6 +20,7 @@ import subprocess
 class my_facedb(datasets.imdb):
     def __init__(self, image_set, data_path):
         datasets.imdb.__init__(self, image_set)
+        self._year = 1000
         self._image_set = image_set
         self._data_path = data_path
         self._result_dir = "result_aflw"
@@ -229,7 +230,7 @@ class my_facedb(datasets.imdb):
                 'gt_overlaps' : overlaps,
                 'flipped' : False}
 
-    def _write_results_file(self, all_boxes):
+    def _write_results_file(self, all_boxes, output_dir):
         use_salt = self.config['use_salt']
         comp_id = 'comp4'
         if use_salt:
@@ -238,7 +239,8 @@ class my_facedb(datasets.imdb):
         # VOCdevkit/results/VOC2007/Main/comp4-44503_det_test_aeroplane.txt
         #path = os.path.join(self._devkit_path, 'results', 'VOC' + self._year,
         #                    'Main', comp_id + '_')
-        path = os.path.join(self._result_dir, comp_id + '_')
+        #path = os.path.join(self._result_dir, comp_id + '_')
+        path = os.path.join(output_dir, comp_id + '_')
         for cls_ind, cls in enumerate(self.classes):
             if cls == '__background__':
                 continue
@@ -248,14 +250,15 @@ class my_facedb(datasets.imdb):
             with open(filename, 'wt') as f:
                 for im_ind, index in enumerate(self.image_index):
                     dets = all_boxes[cls_ind][im_ind]
+                    dets = np.asarray(dets)
+                    f.write('{:s}\n{}\n'.format(index, dets.shape[0]))
                     if dets == []:
                         continue
                     # the VOCdevkit expects 1-based indices
-                    f.write('{:s}\n{}\n'.format(index, dets.shape[0]));
                     for k in xrange(dets.shape[0]):
                         #f.write('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n'.
                         f.write('{:.1f} {:.1f} {:.1f} {:.1f} {:.3f}\n'.
-                                format(index, dets[k, 0], dets[k, 1],
+                                format(dets[k, 0], dets[k, 1],
                                        dets[k, 2], dets[k, 3], dets[k, -1]))
         return comp_id
 
@@ -274,7 +277,7 @@ class my_facedb(datasets.imdb):
         status = subprocess.call(cmd, shell=True)
 
     def evaluate_detections(self, all_boxes, output_dir):
-        comp_id = self._write_results_file(all_boxes)
+        comp_id = self._write_results_file(all_boxes, output_dir)
         #self._do_matlab_eval(comp_id, output_dir)
 
     def competition_mode(self, on):
